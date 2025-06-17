@@ -1,0 +1,77 @@
+{% extends "dashboard/base.html" %}
+{% load custom_filters %}
+{% block content %}
+
+
+<div class="container mt-5">
+  <h3 class="mb-4 text-center">Manage Business Hours</h3>
+  <form method="POST">
+    {% csrf_token %}
+
+    {% for day, label in days %}
+      {% with hour=existing_hours|get_item:day %}
+      <div class="row align-items-center mb-3" style="margin-left: 500px;">
+        <div class="col-md-2">
+          <strong>{{ label }}</strong>
+        </div>
+        
+        
+
+        <div class="col-md-1">
+          <input type="checkbox"
+                 name="{{ day }}_open"
+                 class="form-check-input toggle-day"
+                 data-day="{{ day }}"
+                 {% if hour and not hour.is_closed %}checked{% endif %}>
+          Open
+        </div>
+
+        <div class="col-md-3">
+          <input type="time"
+                 name="{{ day }}_from"
+                 id="{{ day }}_from"
+                 class="form-control"
+                 value="{{ hour.from_time|default:'' }}"
+                 {% if hour and hour.is_closed %}disabled{% endif %}>
+        </div>
+
+        <div class="col-md-3">
+          <input type="time"
+                 name="{{ day }}_to"
+                 id="{{ day }}_to"
+                 class="form-control"
+                 value="{{ hour.to_time|default:'' }}"
+                 {% if hour and hour.is_closed %}disabled{% endif %}>
+        </div>
+      </div>
+      {% endwith %}
+    {% endfor %}
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success">Save Business Hours</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-day').forEach(function (checkbox) {
+      checkbox.addEventListener('change', function () {
+        const day = this.dataset.day;
+        const fromInput = document.getElementById(`${day}_from`);
+        const toInput = document.getElementById(`${day}_to`);
+
+        if (this.checked) {
+          fromInput.disabled = false;
+          toInput.disabled = false;
+        } else {
+          fromInput.disabled = true;
+          toInput.disabled = true;
+          fromInput.value = '';
+          toInput.value = '';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

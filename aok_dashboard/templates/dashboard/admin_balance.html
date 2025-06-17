@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h2 class="text-center">Admin Dashboard: Balance Overview</h2>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+    <h3>Current Balance</h3>
+    <p><strong>${{ current_balance }}</strong></p>
+  </div>
+
+  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+    <h3>Balance from Sales</h3>
+    <p>${{ balance_from_sales }}</p>
+  </div>
+
+  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+    <h3>Balance from Tips</h3>
+    <p>${{ balance_from_tips }}</p>
+  </div>
+
+  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+    <h3>Current AOK Points</h3>
+    <p>{{ aok_points }} points</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "dashboard/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg w-100 mx-3" style="max-width: 600px; margin-left: 180px;">
+        <div class="card-header bg-white text-center" style="color: #926615;">
+            <h4 class="mb-0">Add Menu Item</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_category" class="form-label">Category</label>
+                    {{ form.category|add_class:"form-select" }}
+                </div>
+                <div id="items-list" class="mb-3" style="display:none;">
+                    <label class="form-label">Items in this category:</label>
+                    <ul id="items-ul" class="list-group"></ul>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_name" class="form-label">Item Name</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Description</label>
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_image" class="form-label">Image</label>
+                    {{ form.image|add_class:"form-control" }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">Add Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('id_category');
+        const itemsListDiv = document.getElementById('items-list');
+        const itemsUl = document.getElementById('items-ul');
+    
+        categorySelect.addEventListener('change', function() {
+            const categoryId = this.value;
+    
+            // Clear existing list
+            itemsUl.innerHTML = '';
+            itemsListDiv.style.display = 'none';
+    
+            if (!categoryId) return;
+    
+            fetch(`/get-items/?category_id=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const li = document.createElement('li');
+                            li.className = "list-group-item";
+                            li.textContent = item.name;
+                            itemsUl.appendChild(li);
+                        });
+                    } else {
+                        const li = document.createElement('li');
+                        li.className = "list-group-item text-muted";
+                        li.textContent = "No items found for this category.";
+                        itemsUl.appendChild(li);
+                    }
+                    itemsListDiv.style.display = 'block';
+                });
+        });
+    });
+    </script>
+    
+{% endblock %}

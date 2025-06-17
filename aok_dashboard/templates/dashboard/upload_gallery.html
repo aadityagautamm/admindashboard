@@ -1,0 +1,22 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Upload Gallery Images</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_image" class="form-label">Select Images</label>
+                    {{ form.images }}
+                    <small class="text-muted d-block mt-1">You can select multiple images.</small>
+                </div>
+                <button type="submit" class="btn btn-info">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
